@@ -1,4 +1,5 @@
 import Fluent
+import FluentMySQLDriver
 import FluentSQLiteDriver
 import Vapor
 
@@ -7,9 +8,17 @@ public func configure(_ app: Application) throws {
     // uncomment to serve files from /Public folder
     // app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
 
-    app.databases.use(.sqlite(.file("db.sqlite")), as: .sqlite)
+    if app.environment == .production {
+        var tlsCustomConfiguration = TLSConfiguration.makeClientConfiguration()
+        tlsCustomConfiguration.certificateVerification = .none
+        app.databases.use(.mysql(hostname: "127.0.0.1", username: "vapor_user", password: "", tlsConfiguration: tlsCustomConfiguration), as: .mysql)
+    } else {
+        app.databases.use(.sqlite(.file("db.sqlite")), as: .sqlite)
+    }
 
-    app.migrations.add(CreateTodo())
+    app.migrations.add(CreateFootprint())
+    app.migrations.add(CreateUser())
+    app.migrations.add(CreateUserToken())
 
     // register routes
     try routes(app)
