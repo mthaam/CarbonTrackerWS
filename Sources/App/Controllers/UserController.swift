@@ -19,7 +19,6 @@ struct UserController {
                             email: receivedData.email,
                             passwordHash: Bcrypt.hash(receivedData.password))
         return user.save(on: req.db).transform(to: user)
-        
     }
     
     func login(req: Request) throws -> EventLoopFuture<UserToken> {

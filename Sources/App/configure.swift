@@ -7,6 +7,10 @@ import Vapor
 public func configure(_ app: Application) throws {
     // uncomment to serve files from /Public folder
     // app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
+    
+    // test supervisor:
+    // app.http.server.configuration.hostname = ""
+    // app.http.server.configuration.port = 8080
 
     if app.environment == .production {
         var tlsCustomConfiguration = TLSConfiguration.makeClientConfiguration()
